@@ -1,14 +1,17 @@
+#!/usr/bin/env python3
+
+# examples.py
 """
-Example usage of argparser module
+Example use of argparser module
+
+Usage:
+    python3 examples.py -f "foo" -b "bar"
+
+Demo:
+    python3 examples.py --demo
 
 Show this message:
-$ python3 examples.py --help
-
-Run demo:
-$ python3 examples.py --demo
-
-Run with arguments:
-$ python3 examples.py -f "foo" -b "bar"
+    python3 examples.py --help
 """
 from parsers.argparser import argparser
 

@@ -1,7 +1,8 @@
+# tagparser.py
 """
 HTML Parser template module
 
-Example usage:
+Usage example:
     from tagparser import TagParser
 
     with open("html_doc.html", 'r') as f:
@@ -12,6 +13,7 @@ Example usage:
     parser.close()
 """
 from html.parser import HTMLParser
+
 
 class TagParser(HTMLParser):
     """Find and handle html tags

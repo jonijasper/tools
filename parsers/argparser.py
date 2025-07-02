@@ -1,10 +1,13 @@
+# argparser.py 
 """
 Parser module for handling arguments passed to program when running from cli.
 
-See examples.py for example usage of argparser(), or try running: 
+Usage:
+    See examples.py for example usage of argparser(), or try running: 
     $ python3 examples.py --help
 """
 import sys
+
 
 _HELPTAGS = ["-h", "--help"]
 _DEMOTAGS = ["--demo", "--test"]
