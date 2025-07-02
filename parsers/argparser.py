@@ -9,9 +9,9 @@ Usage:
 import sys
 
 
-_HELPTAGS = ["-h", "--help"]
-_DEMOTAGS = ["--demo", "--test"]
-_ARGDICT = {"-f": None, "-b": None}
+_HELPFLAGS = {"-h", "--help"}
+_DEMOFLAGS = {"--demo", "--test"}
+_ARGDICT = {"-f": None, "-b": []}
 
 def argparser(*, help: str=__doc__, demo: callable=None) -> list:
     """Hanldes arguments passed to program when running from cli.
@@ -28,34 +28,43 @@ def argparser(*, help: str=__doc__, demo: callable=None) -> list:
 
     Raises:
         NotImplementedError: When demo() is called but not defined.
-        TypeError: If a flag encountered is defined in _ARGDICT but the following
-            argument is a flag or missing.
+        TypeError: If a flag is not defined or there is missing arguments.
     ---
 
     """
-    args = sys.argv[1:]
-    
-    for i, arg in enumerate(args):
-        if arg in _ARGDICT:
-            try:
-                value = args[i+1]
-                err = False
-            except IndexError:
-                err = True
+    flag = None
+    for arg in sys.argv[1:]:
+        if arg.startswith('-'):
+            if arg in _ARGDICT:
+                flag = arg
 
-            if err or value.startswith('-'):
-                raise TypeError(f"No argument found for flag {arg}.\n{help}")
+            elif arg in _DEMOFLAGS:
+                try:
+                    demo()
+                except NameError:
+                    raise NotImplementedError(arg)
+                exit()
+
+            elif arg in _HELPFLAGS:
+                print(help)
+                exit()
+
             else:
-                _ARGDICT[arg] = args[i+1]
+                raise TypeError(f"{arg}\n{help}")
+                
+        else:
+            if flag == "-b":
+                _ARGDICT[flag].append(int(arg))
 
-        elif arg in _DEMOTAGS:
-            try:
-                demo()
-            except NameError:
-                raise NotImplementedError(arg)
+            elif flag:
+                _ARGDICT[flag] = arg
 
-        elif arg in _HELPTAGS:
-            print(help)
-            exit()
+            else:
+                raise TypeError(f"{arg}\n{help}")
+                
 
-    return list(_ARGDICT.values())
+    if all(_ARGDICT.values()):
+        return list(_ARGDICT.values())
+    
+    else:
+        raise TypeError(f"{_ARGDICT}\n{help}")
